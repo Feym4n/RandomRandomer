@@ -117,6 +117,8 @@
     tg.MainButton.onClick(onGenerate);
     applyTheme();
     tg.onEvent('themeChanged', applyTheme);
+    // Внутри Telegram скрываем HTML‑кнопку и используем только MainButton
+    els.randomBtn.style.display = 'none';
   }
 })();
 
