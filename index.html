@@ -3,16 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Random UI</title>
+  <title>Random Generator</title>
   <meta name="theme-color" content="#22A7E0" />
 
-  <!-- Bootstrap 5 CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600&display=swap" rel="stylesheet">
   <!-- Local styles -->
   <link rel="stylesheet" href="./styles.css">
-  <!-- Favicon (чтобы убрать 404) -->
+  <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"%3E%3Crect width="64" height="64" rx="12" fill="%2322A7E0"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="Montserrat, Arial, sans-serif" font-size="36" fill="white"%3ER%3C/text%3E%3C/svg%3E'>
 
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -20,7 +18,7 @@
 </head>
 <body>
   <main class="vh-center">
-    <div class="ui-card" role="application" aria-label="Random number UI">
+    <div class="ui-card" role="application" aria-label="Random number generator">
       <div class="big-number" id="currentValue" aria-live="polite"> </div>
       <div class="range-row" role="group" aria-label="Диапазон">
         <div class="range-cell" id="minValue" title="Нажмите, чтобы изменить">1</div>
@@ -31,8 +29,5 @@
     </div>
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-<!-- Логика в src/app.js -->
 </html>
-

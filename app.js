@@ -1,8 +1,15 @@
+/**
+ * Telegram Mini App - Random Number Generator
+ * Clean, readable JavaScript code
+ */
+
 (() => {
+  // Telegram WebApp API
   const tg = window.Telegram?.WebApp;
   tg?.ready?.();
   tg?.expand?.();
 
+  // DOM Elements
   const els = {
     currentValue: document.getElementById('currentValue'),
     minValue: document.getElementById('minValue'),
@@ -11,116 +18,312 @@
     errorMsg: document.getElementById('errorMsg')
   };
 
+  /**
+   * Initialize default values
+   */
   function setDefaults() {
     els.minValue.textContent = '1';
     els.maxValue.textContent = '100';
     els.currentValue.textContent = '';
   }
 
+  /**
+   * Apply Telegram theme colors with forced inversion
+   */
   function applyTheme() {
     if (!tg || !tg.themeParams) return;
-    const p = tg.themeParams;
-    // Поддержка темного/светлого фона приложения
-    if (p.bg_color) document.body.style.backgroundColor = p.bg_color;
-    if (p.text_color) document.body.style.color = p.text_color;
+    
+    const themeParams = tg.themeParams;
+    
+    // Improved theme detection
+    const isDark = themeParams.bg_color === '#17212b' || 
+                   themeParams.bg_color === '#0f1419' ||
+                   themeParams.bg_color === '#212121' ||
+                   themeParams.bg_color === '#1e1e1e' ||
+                   themeParams.bg_color === '#000000' ||
+                   !themeParams.bg_color; // Default is dark
+    
+    console.log('Theme detected:', { isDark, bg_color: themeParams.bg_color });
+    
+    // Force apply theme with !important styles
+    if (!isDark) {
+      // Light theme - force white background
+      document.body.style.setProperty('background-color', '#ffffff', 'important');
+      document.body.style.setProperty('color', '#000000', 'important');
+      
+      // Update CSS variables
+      document.documentElement.style.setProperty('--bg', '#ffffff');
+      document.documentElement.style.setProperty('--text-color', '#000000');
+      document.documentElement.style.setProperty('--range-bg', '#f0f0f0');
+      document.documentElement.style.setProperty('--range-text', '#000000');
+      document.documentElement.style.setProperty('--error-bg', '#ffebee');
+      document.documentElement.style.setProperty('--error-text', '#b00020');
+      
+      // Force apply to specific elements
+      const bigNumber = document.querySelector('.big-number');
+      if (bigNumber) {
+        bigNumber.style.setProperty('color', '#000000', 'important');
+      }
+      
+      const rangeCells = document.querySelectorAll('.range-cell');
+      rangeCells.forEach(cell => {
+        cell.style.setProperty('background-color', '#f0f0f0', 'important');
+        cell.style.setProperty('color', '#000000', 'important');
+        cell.style.setProperty('border', '1px solid #ddd', 'important');
+      });
+      
+      const errorMsg = document.querySelector('.error-msg');
+      if (errorMsg) {
+        errorMsg.style.setProperty('background-color', '#ffebee', 'important');
+        errorMsg.style.setProperty('color', '#b00020', 'important');
+      }
+      
+      const uiCard = document.querySelector('.ui-card');
+      if (uiCard) {
+        uiCard.style.setProperty('background-color', '#ffffff', 'important');
+      }
+      
+      console.log('Applied light theme with force');
+    } else {
+      // Dark theme - force blue background
+      document.body.style.setProperty('background-color', '#22A7E0', 'important');
+      document.body.style.setProperty('color', '#ffffff', 'important');
+      
+      // Update CSS variables
+      document.documentElement.style.setProperty('--bg', '#22A7E0');
+      document.documentElement.style.setProperty('--text-color', '#ffffff');
+      document.documentElement.style.setProperty('--range-bg', '#ffffff');
+      document.documentElement.style.setProperty('--range-text', '#111111');
+      document.documentElement.style.setProperty('--error-bg', '#b00020');
+      document.documentElement.style.setProperty('--error-text', '#ffecec');
+      
+      // Force apply to specific elements
+      const bigNumber = document.querySelector('.big-number');
+      if (bigNumber) {
+        bigNumber.style.setProperty('color', '#ffffff', 'important');
+      }
+      
+      const rangeCells = document.querySelectorAll('.range-cell');
+      rangeCells.forEach(cell => {
+        cell.style.setProperty('background-color', '#ffffff', 'important');
+        cell.style.setProperty('color', '#111111', 'important');
+        cell.style.setProperty('border', 'none', 'important');
+      });
+      
+      const errorMsg = document.querySelector('.error-msg');
+      if (errorMsg) {
+        errorMsg.style.setProperty('background-color', '#b00020', 'important');
+        errorMsg.style.setProperty('color', '#ffecec', 'important');
+      }
+      
+      const uiCard = document.querySelector('.ui-card');
+      if (uiCard) {
+        uiCard.style.setProperty('background-color', '#22A7E0', 'important');
+      }
+      
+      console.log('Applied dark theme with force');
+    }
   }
 
+  /**
+   * Safely parse integer from string
+   * @param {string} value - String to parse
+   * @returns {number|null} - Parsed integer or null if invalid
+   */
   function parseIntSafe(value) {
-    const n = Number.parseInt(String(value).trim(), 10);
-    return Number.isFinite(n) ? n : null;
+    const parsed = Number.parseInt(String(value).trim(), 10);
+    return Number.isFinite(parsed) ? parsed : null;
   }
 
+  /**
+   * Validate min and max values
+   * @param {string} minStr - Minimum value string
+   * @param {string} maxStr - Maximum value string
+   * @returns {Object} - Validation result
+   */
   function validate(minStr, maxStr) {
     const min = parseIntSafe(minStr);
     const max = parseIntSafe(maxStr);
+    
     if (min === null || max === null) {
       return { ok: false, message: 'Введите целые числа.' };
     }
+    
     if (Math.abs(min) > 2147483647 || Math.abs(max) > 2147483647) {
       return { ok: false, message: 'Числа слишком большие.' };
     }
+    
     if (min > max) {
       return { ok: false, message: 'Минимум не может быть больше максимума.' };
     }
+    
     return { ok: true, min, max };
   }
 
+  /**
+   * Generate random integer in range [min, max]
+   * @param {number} min - Minimum value
+   * @param {number} max - Maximum value
+   * @returns {number} - Random integer
+   */
   function randInt(min, max) {
     const range = max - min + 1;
-    let r;
+    let randomValue;
+    
+    // Use crypto.getRandomValues if available, fallback to Math.random
     if (window.crypto && window.crypto.getRandomValues) {
-      const buf = new Uint32Array(1);
-      window.crypto.getRandomValues(buf);
-      r = buf[0];
+      const buffer = new Uint32Array(1);
+      window.crypto.getRandomValues(buffer);
+      randomValue = buffer[0];
     } else {
-      r = Math.floor(Math.random() * 0xffffffff);
+      randomValue = Math.floor(Math.random() * 0xffffffff);
     }
-    return min + (r % range);
+    
+    return min + (randomValue % range);
   }
 
-  function setError(msg) {
+  /**
+   * Show or hide error message
+   * @param {string} message - Error message to display
+   */
+  function setError(message) {
     if (tg) {
-      if (msg) tg.MainButton.hide(); else tg.MainButton.show();
+      if (message) {
+        tg.MainButton.hide();
+      } else {
+        tg.MainButton.show();
+      }
     }
-    // В текущем UI нет текстового блока ошибки — блокируем кнопку.
-    els.randomBtn.disabled = Boolean(msg);
-    els.randomBtn.title = msg || '';
+    
+    // Disable button if error
+    els.randomBtn.disabled = Boolean(message);
+    els.randomBtn.title = message || '';
+    
+    // Show/hide error message
     if (els.errorMsg) {
-      if (msg) { els.errorMsg.textContent = msg; els.errorMsg.style.display = 'block'; }
-      else { els.errorMsg.textContent = ''; els.errorMsg.style.display = 'none'; }
+      if (message) {
+        els.errorMsg.textContent = message;
+        els.errorMsg.style.display = 'block';
+      } else {
+        els.errorMsg.textContent = '';
+        els.errorMsg.style.display = 'none';
+      }
     }
   }
 
+  /**
+   * Update validation state
+   * @returns {Object} - Validation result
+   */
   function updateValidity() {
     const min = (els.minValue.textContent || '').trim();
     const max = (els.maxValue.textContent || '').trim();
-    const v = validate(min, max);
-    setError(v.ok ? '' : v.message);
-    return v;
+    const validation = validate(min, max);
+    
+    setError(validation.ok ? '' : validation.message);
+    return validation;
   }
 
+  /**
+   * Animate result number
+   */
   function animateResult() {
     els.currentValue.style.transform = 'scale(1.1)';
     els.currentValue.style.opacity = '0.6';
+    
     setTimeout(() => {
       els.currentValue.style.transform = 'scale(1)';
       els.currentValue.style.opacity = '1';
     }, 180);
   }
 
-  function onGenerate(e) {
-    e?.preventDefault?.();
-    const v = updateValidity();
-    if (!v.ok) return;
-    const n = randInt(v.min, v.max);
-    els.currentValue.textContent = String(n);
+  /**
+   * Generate random number
+   * @param {Event} event - Click event
+   */
+  function onGenerate(event) {
+    event?.preventDefault?.();
+    
+    const validation = updateValidity();
+    if (!validation.ok) return;
+    
+    const randomNumber = randInt(validation.min, validation.max);
+    els.currentValue.textContent = String(randomNumber);
     animateResult();
   }
 
-  // Events
+  /**
+   * Handle min value click
+   */
+  function onMinValueClick() {
+    const currentValue = els.minValue.textContent || '1';
+    const newValue = prompt('Минимум', currentValue);
+    
+    if (newValue !== null) {
+      els.minValue.textContent = newValue;
+      updateValidity();
+    }
+  }
+
+  /**
+   * Handle max value click
+   */
+  function onMaxValueClick() {
+    const currentValue = els.maxValue.textContent || '100';
+    const newValue = prompt('Максимум', currentValue);
+    
+    if (newValue !== null) {
+      els.maxValue.textContent = newValue;
+      updateValidity();
+    }
+  }
+
+  /**
+   * Handle Enter key press
+   * @param {KeyboardEvent} event - Keyboard event
+   */
+  function onKeyDown(event) {
+    if (event.key === 'Enter') {
+      onGenerate(event);
+    }
+  }
+
+  // Initialize app
   setDefaults();
   updateValidity();
-  els.randomBtn.addEventListener('click', onGenerate);
-  // Изменение min/max по клику — быстрое редактирование через prompt
-  els.minValue.addEventListener('click', () => {
-    const val = prompt('Минимум', els.minValue.textContent || '1');
-    if (val !== null) { els.minValue.textContent = val; updateValidity(); }
-  });
-  els.maxValue.addEventListener('click', () => {
-    const val = prompt('Максимум', els.maxValue.textContent || '100');
-    if (val !== null) { els.maxValue.textContent = val; updateValidity(); }
-  });
-  document.addEventListener('keydown', (e) => { if (e.key === 'Enter') onGenerate(e); });
+  
+  // Force apply theme immediately
+  setTimeout(() => {
+    applyTheme();
+  }, 100);
+  
+  // Force apply theme again after DOM is ready
+  setTimeout(() => {
+    applyTheme();
+  }, 500);
 
+  // Event listeners
+  els.randomBtn.addEventListener('click', onGenerate);
+  els.minValue.addEventListener('click', onMinValueClick);
+  els.maxValue.addEventListener('click', onMaxValueClick);
+  document.addEventListener('keydown', onKeyDown);
+
+  // Telegram WebApp integration
   if (tg) {
     tg.MainButton.setText('Рандом');
     tg.MainButton.onClick(onGenerate);
+    
+    // Apply theme immediately and on change
     applyTheme();
-    tg.onEvent('themeChanged', applyTheme);
-    // Внутри Telegram скрываем HTML‑кнопку и используем только MainButton
+    tg.onEvent('themeChanged', () => {
+      console.log('Theme changed, reapplying...');
+      setTimeout(applyTheme, 100); // Small delay to ensure theme params are updated
+    });
+    
+    // Hide HTML button in Telegram, use only MainButton
     els.randomBtn.style.display = 'none';
-    // Ограничиваем размер окна для Desktop Telegram
-    tg.enableClosingConfirmation();
+    
+    // Explicitly disable closing confirmation
+    tg.disableClosingConfirmation();
   }
 })();
-

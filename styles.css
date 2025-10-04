@@ -1,30 +1,243 @@
-:root{--bg:#22A7E0;--btn-grad-start:#1C82C7;--btn-grad-end:#2A9BD9}
-*{box-sizing:border-box}
-html,body{height:100%}
-body{margin:0;background:var(--bg);color:#fff;font-family:"Montserrat",system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
-.vh-center{min-height:100vh;display:flex;align-items:center;justify-content:center}
-.ui-card{width:100%;max-width:420px;text-align:center;padding:48px 24px;box-sizing:border-box}
-.big-number{font-size:120px;line-height:1;font-weight:300;margin-bottom:44px;color:#fff;user-select:none;transition:transform .18s ease,opacity .18s ease}
-.range-row{display:flex;gap:20px;justify-content:space-between;margin:0 0 32px 0}
-.range-row .range-cell:first-child{margin-left:12px}
-.range-row .range-cell:last-child{margin-right:12px}
-.range-cell{background:#fff;color:#111;padding:14px 36px;border-radius:10px;min-width:120px;display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 2px 0 rgba(0,0,0,.04);user-select:none;cursor:pointer}
-.error-msg{min-height:1.2em;margin:-12px 0 18px 0;color:#ffecec;background:#b00020;border-radius:8px;padding:6px 10px;display:none;font-weight:600}
-.random-btn{display:block;width:100%;padding:18px 24px;border-radius:12px;font-size:28px;font-weight:600;color:#fff;border:0;background:linear-gradient(180deg,var(--btn-grad-start),var(--btn-grad-end));box-shadow:0 6px 14px rgba(0,0,0,.12);cursor:pointer}
-@media (max-width:420px){.big-number{font-size:88px;margin-bottom:28px}.range-cell{min-width:92px;padding:10px 18px;font-size:22px}.ui-card{padding:36px 16px;max-width:360px}}
-
-/* Размещение блока диапазона у нижней кромки */
-.ui-card{position:relative;padding-bottom:140px}
-.range-row{position:fixed;left:16px;right:16px;bottom:10px;padding:0;z-index:10}
-.error-msg{position:fixed;left:16px;right:16px;bottom:16px;z-index:10}
-
-/* Компактный размер для Desktop Telegram */
-@media (min-width: 768px) {
-  .ui-card { max-width: 380px; padding: 32px 20px; }
-  .big-number { font-size: 80px; margin-bottom: 24px; }
-  .range-cell { min-width: 100px; padding: 12px 24px; font-size: 24px; }
-  .random-btn { font-size: 20px; padding: 14px 20px; }
-  .range-row { bottom: 60px; left: 20px; right: 20px; }
-  .error-msg { bottom: 12px; left: 20px; right: 20px; }
+/* CSS Variables */
+:root {
+  --bg: #22A7E0;
+  --btn-grad-start: #1C82C7;
+  --btn-grad-end: #2A9BD9;
+  --text-color: #ffffff;
+  --range-bg: #ffffff;
+  --range-text: #111111;
+  --error-bg: #b00020;
+  --error-text: #ffecec;
 }
 
+/* Light theme variables */
+:root[data-theme="light"] {
+  --bg: #ffffff;
+  --text-color: #000000;
+  --range-bg: #f0f0f0;
+  --range-text: #000000;
+  --error-bg: #ffebee;
+  --error-text: #b00020;
+}
+
+/* Reset and Base Styles */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text-color);
+  font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Compact modal-like appearance */
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  /* Add padding to center the compact app */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Layout */
+.vh-center {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Add background for modal effect */
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  margin: 0;
+}
+
+.ui-card {
+  width: 100%;
+  max-width: 240px;
+  text-align: center;
+  padding: 16px 12px;
+  box-sizing: border-box;
+  position: relative;
+  padding-bottom: 60px;
+  /* Add modal-like styling */
+  background: var(--bg);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Big Number Display */
+.big-number {
+  font-size: 60px;
+  line-height: 1;
+  font-weight: 300;
+  margin-bottom: 16px;
+  color: var(--text-color);
+  user-select: none;
+  transition: transform 0.18s ease, opacity 0.18s ease, color 0.3s ease;
+}
+
+/* Range Input Row */
+.range-row {
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  margin: 0 0 12px 0;
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: 6px;
+  padding: 0;
+  z-index: 10;
+}
+
+.range-row .range-cell:first-child {
+  margin-left: 12px;
+}
+
+.range-row .range-cell:last-child {
+  margin-right: 12px;
+}
+
+.range-cell {
+  background: var(--range-bg);
+  color: var(--range-text);
+  padding: 8px 16px;
+  border-radius: 6px;
+  min-width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  user-select: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Error Message */
+.error-msg {
+  min-height: 1.2em;
+  margin: -12px 0 18px 0;
+  color: var(--error-text);
+  background: var(--error-bg);
+  border-radius: 6px;
+  padding: 8px 12px;
+  display: none;
+  font-weight: 600;
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  bottom: 12px;
+  z-index: 10;
+  font-size: 14px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Random Button */
+.random-btn {
+  display: block;
+  width: 100%;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  border: 0;
+  background: linear-gradient(180deg, var(--btn-grad-start), var(--btn-grad-end));
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.random-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.random-btn:active {
+  transform: translateY(0);
+}
+
+/* Mobile Responsive */
+@media (max-width: 420px) {
+  .big-number {
+    font-size: 48px;
+    margin-bottom: 12px;
+  }
+  
+  .range-cell {
+    min-width: 50px;
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+  
+  .ui-card {
+    padding: 12px 8px;
+    max-width: 240px;
+    padding-bottom: 60px;
+  }
+  
+  .random-btn {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+}
+
+/* Desktop Telegram - Ultra Compact Size */
+@media (min-width: 768px) {
+  body {
+    padding: 40px;
+    background: #f0f0f0;
+  }
+  
+  .vh-center {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 16px;
+    padding: 20px;
+  }
+  
+  .ui-card {
+    max-width: 200px;
+    padding: 12px 8px;
+    padding-bottom: 50px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  }
+  
+  .big-number {
+    font-size: 40px;
+    margin-bottom: 12px;
+  }
+  
+  .range-cell {
+    min-width: 50px;
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+  
+  .random-btn {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+  
+  .range-row {
+    bottom: 30px;
+    left: 8px;
+    right: 8px;
+  }
+  
+  .error-msg {
+    bottom: 4px;
+    left: 8px;
+    right: 8px;
+    font-size: 12px;
+  }
+}
