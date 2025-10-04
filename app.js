@@ -265,7 +265,7 @@
     // Hide HTML button in Telegram, use only MainButton
     els.randomBtn.style.display = 'none';
     
-    // Remove closing confirmation to avoid annoying popup
-    // tg.enableClosingConfirmation(); // Commented out
+    // Explicitly disable closing confirmation
+    tg.disableClosingConfirmation();
   }
 })();
