@@ -1,23 +1,23 @@
-/* CSS Variables */
+/* CSS Variables - Light theme by default */
 :root {
-  --bg: #22A7E0;
-  --btn-grad-start: #1C82C7;
-  --btn-grad-end: #2A9BD9;
-  --text-color: #ffffff;
-  --range-bg: #ffffff;
-  --range-text: #111111;
-  --error-bg: #b00020;
-  --error-text: #ffecec;
-}
-
-/* Light theme variables */
-:root[data-theme="light"] {
   --bg: #ffffff;
   --text-color: #000000;
+  --btn-grad-start: #1C82C7;
+  --btn-grad-end: #2A9BD9;
   --range-bg: #f0f0f0;
   --range-text: #000000;
   --error-bg: #ffebee;
   --error-text: #b00020;
+}
+
+/* Dark theme */
+:root[data-theme="dark"] {
+  --bg: #000000;
+  --text-color: #ffffff;
+  --range-bg: #333333;
+  --range-text: #ffffff;
+  --error-bg: #b00020;
+  --error-text: #ffecec;
 }
 
 /* Reset and Base Styles */

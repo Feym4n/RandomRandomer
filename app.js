@@ -1,6 +1,6 @@
 /**
  * Telegram Mini App - Random Number Generator
- * Clean, readable JavaScript code
+ * Clean, readable JavaScript code with simple theme inversion
  */
 
 (() => {
@@ -28,14 +28,14 @@
   }
 
   /**
-   * Apply Telegram theme colors with forced inversion
+   * Apply Telegram theme colors with simple inversion
    */
   function applyTheme() {
     if (!tg || !tg.themeParams) return;
     
     const themeParams = tg.themeParams;
     
-    // Improved theme detection
+    // Simple theme detection - if dark colors, use dark theme
     const isDark = themeParams.bg_color === '#17212b' || 
                    themeParams.bg_color === '#0f1419' ||
                    themeParams.bg_color === '#212121' ||
@@ -45,83 +45,14 @@
     
     console.log('Theme detected:', { isDark, bg_color: themeParams.bg_color });
     
-    // Force apply theme with !important styles
-    if (!isDark) {
-      // Light theme - force white background
-      document.body.style.setProperty('background-color', '#ffffff', 'important');
-      document.body.style.setProperty('color', '#000000', 'important');
-      
-      // Update CSS variables
-      document.documentElement.style.setProperty('--bg', '#ffffff');
-      document.documentElement.style.setProperty('--text-color', '#000000');
-      document.documentElement.style.setProperty('--range-bg', '#f0f0f0');
-      document.documentElement.style.setProperty('--range-text', '#000000');
-      document.documentElement.style.setProperty('--error-bg', '#ffebee');
-      document.documentElement.style.setProperty('--error-text', '#b00020');
-      
-      // Force apply to specific elements
-      const bigNumber = document.querySelector('.big-number');
-      if (bigNumber) {
-        bigNumber.style.setProperty('color', '#000000', 'important');
-      }
-      
-      const rangeCells = document.querySelectorAll('.range-cell');
-      rangeCells.forEach(cell => {
-        cell.style.setProperty('background-color', '#f0f0f0', 'important');
-        cell.style.setProperty('color', '#000000', 'important');
-        cell.style.setProperty('border', '1px solid #ddd', 'important');
-      });
-      
-      const errorMsg = document.querySelector('.error-msg');
-      if (errorMsg) {
-        errorMsg.style.setProperty('background-color', '#ffebee', 'important');
-        errorMsg.style.setProperty('color', '#b00020', 'important');
-      }
-      
-      const uiCard = document.querySelector('.ui-card');
-      if (uiCard) {
-        uiCard.style.setProperty('background-color', '#ffffff', 'important');
-      }
-      
-      console.log('Applied light theme with force');
+    if (isDark) {
+      // Dark theme: black background, white text
+      document.documentElement.setAttribute('data-theme', 'dark');
+      console.log('Applied dark theme');
     } else {
-      // Dark theme - force blue background
-      document.body.style.setProperty('background-color', '#22A7E0', 'important');
-      document.body.style.setProperty('color', '#ffffff', 'important');
-      
-      // Update CSS variables
-      document.documentElement.style.setProperty('--bg', '#22A7E0');
-      document.documentElement.style.setProperty('--text-color', '#ffffff');
-      document.documentElement.style.setProperty('--range-bg', '#ffffff');
-      document.documentElement.style.setProperty('--range-text', '#111111');
-      document.documentElement.style.setProperty('--error-bg', '#b00020');
-      document.documentElement.style.setProperty('--error-text', '#ffecec');
-      
-      // Force apply to specific elements
-      const bigNumber = document.querySelector('.big-number');
-      if (bigNumber) {
-        bigNumber.style.setProperty('color', '#ffffff', 'important');
-      }
-      
-      const rangeCells = document.querySelectorAll('.range-cell');
-      rangeCells.forEach(cell => {
-        cell.style.setProperty('background-color', '#ffffff', 'important');
-        cell.style.setProperty('color', '#111111', 'important');
-        cell.style.setProperty('border', 'none', 'important');
-      });
-      
-      const errorMsg = document.querySelector('.error-msg');
-      if (errorMsg) {
-        errorMsg.style.setProperty('background-color', '#b00020', 'important');
-        errorMsg.style.setProperty('color', '#ffecec', 'important');
-      }
-      
-      const uiCard = document.querySelector('.ui-card');
-      if (uiCard) {
-        uiCard.style.setProperty('background-color', '#22A7E0', 'important');
-      }
-      
-      console.log('Applied dark theme with force');
+      // Light theme: white background, black text (default)
+      document.documentElement.removeAttribute('data-theme');
+      console.log('Applied light theme');
     }
   }
 
@@ -291,16 +222,6 @@
   // Initialize app
   setDefaults();
   updateValidity();
-  
-  // Force apply theme immediately
-  setTimeout(() => {
-    applyTheme();
-  }, 100);
-  
-  // Force apply theme again after DOM is ready
-  setTimeout(() => {
-    applyTheme();
-  }, 500);
 
   // Event listeners
   els.randomBtn.addEventListener('click', onGenerate);
