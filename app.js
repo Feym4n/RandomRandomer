@@ -28,7 +28,7 @@
   }
 
   /**
-   * Apply Telegram theme colors with proper inversion
+   * Apply Telegram theme colors with forced inversion
    */
   function applyTheme() {
     if (!tg || !tg.themeParams) return;
@@ -45,11 +45,11 @@
     
     console.log('Theme detected:', { isDark, bg_color: themeParams.bg_color });
     
-    // Apply theme directly to body and elements
+    // Force apply theme with !important styles
     if (!isDark) {
-      // Light theme
-      document.body.style.backgroundColor = '#ffffff';
-      document.body.style.color = '#000000';
+      // Light theme - force white background
+      document.body.style.setProperty('background-color', '#ffffff', 'important');
+      document.body.style.setProperty('color', '#000000', 'important');
       
       // Update CSS variables
       document.documentElement.style.setProperty('--bg', '#ffffff');
@@ -59,28 +59,35 @@
       document.documentElement.style.setProperty('--error-bg', '#ffebee');
       document.documentElement.style.setProperty('--error-text', '#b00020');
       
-      // Apply to specific elements
+      // Force apply to specific elements
       const bigNumber = document.querySelector('.big-number');
-      if (bigNumber) bigNumber.style.color = '#000000';
+      if (bigNumber) {
+        bigNumber.style.setProperty('color', '#000000', 'important');
+      }
       
       const rangeCells = document.querySelectorAll('.range-cell');
       rangeCells.forEach(cell => {
-        cell.style.backgroundColor = '#f0f0f0';
-        cell.style.color = '#000000';
-        cell.style.border = '1px solid #ddd';
+        cell.style.setProperty('background-color', '#f0f0f0', 'important');
+        cell.style.setProperty('color', '#000000', 'important');
+        cell.style.setProperty('border', '1px solid #ddd', 'important');
       });
       
       const errorMsg = document.querySelector('.error-msg');
       if (errorMsg) {
-        errorMsg.style.backgroundColor = '#ffebee';
-        errorMsg.style.color = '#b00020';
+        errorMsg.style.setProperty('background-color', '#ffebee', 'important');
+        errorMsg.style.setProperty('color', '#b00020', 'important');
       }
       
-      console.log('Applied light theme');
+      const uiCard = document.querySelector('.ui-card');
+      if (uiCard) {
+        uiCard.style.setProperty('background-color', '#ffffff', 'important');
+      }
+      
+      console.log('Applied light theme with force');
     } else {
-      // Dark theme
-      document.body.style.backgroundColor = '#22A7E0';
-      document.body.style.color = '#ffffff';
+      // Dark theme - force blue background
+      document.body.style.setProperty('background-color', '#22A7E0', 'important');
+      document.body.style.setProperty('color', '#ffffff', 'important');
       
       // Update CSS variables
       document.documentElement.style.setProperty('--bg', '#22A7E0');
@@ -90,24 +97,31 @@
       document.documentElement.style.setProperty('--error-bg', '#b00020');
       document.documentElement.style.setProperty('--error-text', '#ffecec');
       
-      // Apply to specific elements
+      // Force apply to specific elements
       const bigNumber = document.querySelector('.big-number');
-      if (bigNumber) bigNumber.style.color = '#ffffff';
+      if (bigNumber) {
+        bigNumber.style.setProperty('color', '#ffffff', 'important');
+      }
       
       const rangeCells = document.querySelectorAll('.range-cell');
       rangeCells.forEach(cell => {
-        cell.style.backgroundColor = '#ffffff';
-        cell.style.color = '#111111';
-        cell.style.border = 'none';
+        cell.style.setProperty('background-color', '#ffffff', 'important');
+        cell.style.setProperty('color', '#111111', 'important');
+        cell.style.setProperty('border', 'none', 'important');
       });
       
       const errorMsg = document.querySelector('.error-msg');
       if (errorMsg) {
-        errorMsg.style.backgroundColor = '#b00020';
-        errorMsg.style.color = '#ffecec';
+        errorMsg.style.setProperty('background-color', '#b00020', 'important');
+        errorMsg.style.setProperty('color', '#ffecec', 'important');
       }
       
-      console.log('Applied dark theme');
+      const uiCard = document.querySelector('.ui-card');
+      if (uiCard) {
+        uiCard.style.setProperty('background-color', '#22A7E0', 'important');
+      }
+      
+      console.log('Applied dark theme with force');
     }
   }
 
@@ -277,6 +291,16 @@
   // Initialize app
   setDefaults();
   updateValidity();
+  
+  // Force apply theme immediately
+  setTimeout(() => {
+    applyTheme();
+  }, 100);
+  
+  // Force apply theme again after DOM is ready
+  setTimeout(() => {
+    applyTheme();
+  }, 500);
 
   // Event listeners
   els.randomBtn.addEventListener('click', onGenerate);

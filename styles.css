@@ -36,11 +36,14 @@ body {
   font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* Force fixed dimensions for Telegram */
+  /* Compact modal-like appearance */
   width: 100vw;
   height: 100vh;
   overflow: hidden;
   transition: background-color 0.3s ease, color 0.3s ease;
+  /* Add padding to center the compact app */
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 /* Layout */
@@ -49,16 +52,25 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  /* Add background for modal effect */
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  margin: 0;
 }
 
 .ui-card {
   width: 100%;
-  max-width: 280px;
+  max-width: 240px;
   text-align: center;
   padding: 16px 12px;
   box-sizing: border-box;
   position: relative;
-  padding-bottom: 70px;
+  padding-bottom: 60px;
+  /* Add modal-like styling */
+  background: var(--bg);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Big Number Display */
@@ -180,39 +192,52 @@ body {
   }
 }
 
-/* Desktop Telegram - Compact Size */
+/* Desktop Telegram - Ultra Compact Size */
 @media (min-width: 768px) {
+  body {
+    padding: 40px;
+    background: #f0f0f0;
+  }
+  
+  .vh-center {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 16px;
+    padding: 20px;
+  }
+  
   .ui-card {
-    max-width: 260px;
-    padding: 16px 12px;
-    padding-bottom: 60px;
+    max-width: 200px;
+    padding: 12px 8px;
+    padding-bottom: 50px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
   }
   
   .big-number {
-    font-size: 48px;
-    margin-bottom: 16px;
+    font-size: 40px;
+    margin-bottom: 12px;
   }
   
   .range-cell {
-    min-width: 60px;
-    padding: 8px 16px;
-    font-size: 16px;
+    min-width: 50px;
+    padding: 6px 12px;
+    font-size: 14px;
   }
   
   .random-btn {
-    font-size: 14px;
-    padding: 8px 12px;
+    font-size: 12px;
+    padding: 6px 10px;
   }
   
   .range-row {
-    bottom: 40px;
-    left: 12px;
-    right: 12px;
+    bottom: 30px;
+    left: 8px;
+    right: 8px;
   }
   
   .error-msg {
-    bottom: 6px;
-    left: 12px;
-    right: 12px;
+    bottom: 4px;
+    left: 8px;
+    right: 8px;
+    font-size: 12px;
   }
 }
