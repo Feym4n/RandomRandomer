@@ -23,7 +23,7 @@
    */
   function setDefaults() {
     els.minValue.textContent = '1';
-    els.maxValue.textContent = '100';
+    els.maxValue.textContent = '10';
     els.currentValue.textContent = '';
   }
 
@@ -200,7 +200,7 @@
    * Handle max value click
    */
   function onMaxValueClick() {
-    const currentValue = els.maxValue.textContent || '100';
+    const currentValue = els.maxValue.textContent || '10';
     const newValue = prompt('Максимум', currentValue);
     
     if (newValue !== null) {
