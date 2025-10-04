@@ -28,80 +28,44 @@
   }
 
   /**
-   * Apply Telegram theme colors with smart inversion
+   * Apply Telegram theme colors with improved inversion
    */
   function applyTheme() {
     if (!tg || !tg.themeParams) return;
     
     const themeParams = tg.themeParams;
     
-    // More reliable theme detection
+    // Improved theme detection
     const isDark = themeParams.bg_color === '#17212b' || 
                    themeParams.bg_color === '#0f1419' ||
                    themeParams.bg_color === '#212121' ||
                    themeParams.bg_color === '#1e1e1e' ||
+                   themeParams.bg_color === '#000000' ||
                    !themeParams.bg_color; // Default is dark
     
     console.log('Theme detected:', { isDark, bg_color: themeParams.bg_color });
     
+    // Set theme attribute for CSS
+    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+    
     if (!isDark) {
-      // Light theme: force white background and dark text
-      document.body.style.backgroundColor = '#ffffff';
-      document.body.style.color = '#000000';
-      
-      // Update CSS variables for light theme
+      // Light theme: use CSS variables
       document.documentElement.style.setProperty('--bg', '#ffffff');
-      
-      // Make range cells dark for visibility
-      const rangeCells = document.querySelectorAll('.range-cell');
-      rangeCells.forEach(cell => {
-        cell.style.backgroundColor = '#f0f0f0';
-        cell.style.color = '#000000';
-        cell.style.border = '1px solid #ddd';
-      });
-      
-      // Make big number dark
-      const bigNumber = document.querySelector('.big-number');
-      if (bigNumber) {
-        bigNumber.style.color = '#000000';
-      }
-      
-      // Make error message dark
-      const errorMsg = document.querySelector('.error-msg');
-      if (errorMsg) {
-        errorMsg.style.backgroundColor = '#ffebee';
-        errorMsg.style.color = '#b00020';
-      }
+      document.documentElement.style.setProperty('--text-color', '#000000');
+      document.documentElement.style.setProperty('--range-bg', '#f0f0f0');
+      document.documentElement.style.setProperty('--range-text', '#000000');
+      document.documentElement.style.setProperty('--error-bg', '#ffebee');
+      document.documentElement.style.setProperty('--error-text', '#b00020');
       
       console.log('Applied light theme');
     } else {
       // Dark theme: restore original colors
-      document.body.style.backgroundColor = '#22A7E0';
-      document.body.style.color = '#ffffff';
-      
-      // Update CSS variables for dark theme
       document.documentElement.style.setProperty('--bg', '#22A7E0');
-      
-      // Restore range cells
-      const rangeCells = document.querySelectorAll('.range-cell');
-      rangeCells.forEach(cell => {
-        cell.style.backgroundColor = '#fff';
-        cell.style.color = '#111';
-        cell.style.border = 'none';
-      });
-      
-      // Restore big number
-      const bigNumber = document.querySelector('.big-number');
-      if (bigNumber) {
-        bigNumber.style.color = '#fff';
-      }
-      
-      // Restore error message
-      const errorMsg = document.querySelector('.error-msg');
-      if (errorMsg) {
-        errorMsg.style.backgroundColor = '#b00020';
-        errorMsg.style.color = '#ffecec';
-      }
+      document.documentElement.style.setProperty('--text-color', '#ffffff');
+      document.documentElement.style.setProperty('--range-bg', '#ffffff');
+      document.documentElement.style.setProperty('--range-text', '#111111');
+      document.documentElement.style.setProperty('--error-bg', '#b00020');
+      document.documentElement.style.setProperty('--error-text', '#ffecec');
       
       console.log('Applied dark theme');
     }
