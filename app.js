@@ -28,7 +28,7 @@
   }
 
   /**
-   * Apply Telegram theme colors with improved inversion
+   * Apply Telegram theme colors with proper inversion
    */
   function applyTheme() {
     if (!tg || !tg.themeParams) return;
@@ -45,11 +45,13 @@
     
     console.log('Theme detected:', { isDark, bg_color: themeParams.bg_color });
     
-    // Set theme attribute for CSS
-    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
-    
+    // Apply theme directly to body and elements
     if (!isDark) {
-      // Light theme: use CSS variables
+      // Light theme
+      document.body.style.backgroundColor = '#ffffff';
+      document.body.style.color = '#000000';
+      
+      // Update CSS variables
       document.documentElement.style.setProperty('--bg', '#ffffff');
       document.documentElement.style.setProperty('--text-color', '#000000');
       document.documentElement.style.setProperty('--range-bg', '#f0f0f0');
@@ -57,15 +59,53 @@
       document.documentElement.style.setProperty('--error-bg', '#ffebee');
       document.documentElement.style.setProperty('--error-text', '#b00020');
       
+      // Apply to specific elements
+      const bigNumber = document.querySelector('.big-number');
+      if (bigNumber) bigNumber.style.color = '#000000';
+      
+      const rangeCells = document.querySelectorAll('.range-cell');
+      rangeCells.forEach(cell => {
+        cell.style.backgroundColor = '#f0f0f0';
+        cell.style.color = '#000000';
+        cell.style.border = '1px solid #ddd';
+      });
+      
+      const errorMsg = document.querySelector('.error-msg');
+      if (errorMsg) {
+        errorMsg.style.backgroundColor = '#ffebee';
+        errorMsg.style.color = '#b00020';
+      }
+      
       console.log('Applied light theme');
     } else {
-      // Dark theme: restore original colors
+      // Dark theme
+      document.body.style.backgroundColor = '#22A7E0';
+      document.body.style.color = '#ffffff';
+      
+      // Update CSS variables
       document.documentElement.style.setProperty('--bg', '#22A7E0');
       document.documentElement.style.setProperty('--text-color', '#ffffff');
       document.documentElement.style.setProperty('--range-bg', '#ffffff');
       document.documentElement.style.setProperty('--range-text', '#111111');
       document.documentElement.style.setProperty('--error-bg', '#b00020');
       document.documentElement.style.setProperty('--error-text', '#ffecec');
+      
+      // Apply to specific elements
+      const bigNumber = document.querySelector('.big-number');
+      if (bigNumber) bigNumber.style.color = '#ffffff';
+      
+      const rangeCells = document.querySelectorAll('.range-cell');
+      rangeCells.forEach(cell => {
+        cell.style.backgroundColor = '#ffffff';
+        cell.style.color = '#111111';
+        cell.style.border = 'none';
+      });
+      
+      const errorMsg = document.querySelector('.error-msg');
+      if (errorMsg) {
+        errorMsg.style.backgroundColor = '#b00020';
+        errorMsg.style.color = '#ffecec';
+      }
       
       console.log('Applied dark theme');
     }
