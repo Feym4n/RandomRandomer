@@ -66,6 +66,13 @@
         bigNumber.style.color = '#000000';
       }
       
+      // Make error message dark
+      const errorMsg = document.querySelector('.error-msg');
+      if (errorMsg) {
+        errorMsg.style.backgroundColor = '#ffebee';
+        errorMsg.style.color = '#b00020';
+      }
+      
       console.log('Applied light theme');
     } else {
       // Dark theme: restore original colors
@@ -87,6 +94,13 @@
       const bigNumber = document.querySelector('.big-number');
       if (bigNumber) {
         bigNumber.style.color = '#fff';
+      }
+      
+      // Restore error message
+      const errorMsg = document.querySelector('.error-msg');
+      if (errorMsg) {
+        errorMsg.style.backgroundColor = '#b00020';
+        errorMsg.style.color = '#ffecec';
       }
       
       console.log('Applied dark theme');
