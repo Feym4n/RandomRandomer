@@ -14,9 +14,9 @@ body{margin:0;background:var(--bg);color:#fff;font-family:"Montserrat",system-ui
 @media (max-width:420px){.big-number{font-size:88px;margin-bottom:28px}.range-cell{min-width:92px;padding:10px 18px;font-size:22px}.ui-card{padding:36px 16px;max-width:360px}}
 
 /* Размещение блока диапазона у нижней кромки */
-.ui-card{position:relative;padding-bottom:120px}
-.range-row{position:absolute;left:0;right:0;bottom:56px;padding:0 16px}
-.error-msg{position:absolute;left:16px;right:16px;bottom:28px}
+.ui-card{position:relative;padding-bottom:140px}
+.range-row{position:fixed;left:16px;right:16px;bottom:80px;padding:0;z-index:10}
+.error-msg{position:fixed;left:16px;right:16px;bottom:16px;z-index:10}
 
 /* Компактный размер для Desktop Telegram */
 @media (min-width: 768px) {
@@ -24,5 +24,7 @@ body{margin:0;background:var(--bg);color:#fff;font-family:"Montserrat",system-ui
   .big-number { font-size: 80px; margin-bottom: 24px; }
   .range-cell { min-width: 100px; padding: 12px 24px; font-size: 24px; }
   .random-btn { font-size: 20px; padding: 14px 20px; }
+  .range-row { bottom: 60px; left: 20px; right: 20px; }
+  .error-msg { bottom: 12px; left: 20px; right: 20px; }
 }
 
