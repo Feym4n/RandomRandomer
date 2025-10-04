@@ -18,3 +18,11 @@ body{margin:0;background:var(--bg);color:#fff;font-family:"Montserrat",system-ui
 .range-row{position:absolute;left:0;right:0;bottom:56px;padding:0 16px}
 .error-msg{position:absolute;left:16px;right:16px;bottom:28px}
 
+/* Компактный размер для Desktop Telegram */
+@media (min-width: 768px) {
+  .ui-card { max-width: 380px; padding: 32px 20px; }
+  .big-number { font-size: 80px; margin-bottom: 24px; }
+  .range-cell { min-width: 100px; padding: 12px 24px; font-size: 24px; }
+  .random-btn { font-size: 20px; padding: 14px 20px; }
+}
+

@@ -22,7 +22,7 @@
   els.minValue.addEventListener('click', ()=>{ const val=prompt('Минимум', els.minValue.textContent||'1'); if(val!==null){ els.minValue.textContent=val; updateValidity(); }});
   els.maxValue.addEventListener('click', ()=>{ const val=prompt('Максимум', els.maxValue.textContent||'100'); if(val!==null){ els.maxValue.textContent=val; updateValidity(); }});
   document.addEventListener('keydown', e=>{ if(e.key==='Enter') onGenerate(e); });
-  if(tg){ tg.MainButton.setText('Рандом'); tg.MainButton.onClick(onGenerate); applyTheme(); tg.onEvent('themeChanged', applyTheme); document.getElementById('randomBtn').style.display='none'; }
+  if(tg){ tg.MainButton.setText('Рандом'); tg.MainButton.onClick(onGenerate); applyTheme(); tg.onEvent('themeChanged', applyTheme); document.getElementById('randomBtn').style.display='none'; tg.enableClosingConfirmation(); }
 })();
 
 

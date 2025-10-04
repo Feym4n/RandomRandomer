@@ -119,6 +119,8 @@
     tg.onEvent('themeChanged', applyTheme);
     // Внутри Telegram скрываем HTML‑кнопку и используем только MainButton
     els.randomBtn.style.display = 'none';
+    // Ограничиваем размер окна для Desktop Telegram
+    tg.enableClosingConfirmation();
   }
 })();
 
