@@ -34,30 +34,23 @@
     if (!tg || !tg.themeParams) return;
     
     const themeParams = tg.themeParams;
+    
+    // More reliable theme detection
     const isDark = themeParams.bg_color === '#17212b' || 
                    themeParams.bg_color === '#0f1419' ||
+                   themeParams.bg_color === '#212121' ||
+                   themeParams.bg_color === '#1e1e1e' ||
                    !themeParams.bg_color; // Default is dark
     
-    // Apply background color
-    if (themeParams.bg_color) {
-      document.body.style.backgroundColor = themeParams.bg_color;
-    }
+    console.log('Theme detected:', { isDark, bg_color: themeParams.bg_color });
     
-    // Apply text color
-    if (themeParams.text_color) {
-      document.body.style.color = themeParams.text_color;
-    }
-    
-    // Smart color inversion for light theme
     if (!isDark) {
-      // Light theme: invert colors
+      // Light theme: force white background and dark text
       document.body.style.backgroundColor = '#ffffff';
       document.body.style.color = '#000000';
       
       // Update CSS variables for light theme
       document.documentElement.style.setProperty('--bg', '#ffffff');
-      document.documentElement.style.setProperty('--btn-grad-start', '#1C82C7');
-      document.documentElement.style.setProperty('--btn-grad-end', '#2A9BD9');
       
       // Make range cells dark for visibility
       const rangeCells = document.querySelectorAll('.range-cell');
@@ -66,11 +59,21 @@
         cell.style.color = '#000000';
         cell.style.border = '1px solid #ddd';
       });
+      
+      // Make big number dark
+      const bigNumber = document.querySelector('.big-number');
+      if (bigNumber) {
+        bigNumber.style.color = '#000000';
+      }
+      
+      console.log('Applied light theme');
     } else {
       // Dark theme: restore original colors
+      document.body.style.backgroundColor = '#22A7E0';
+      document.body.style.color = '#ffffff';
+      
+      // Update CSS variables for dark theme
       document.documentElement.style.setProperty('--bg', '#22A7E0');
-      document.documentElement.style.setProperty('--btn-grad-start', '#1C82C7');
-      document.documentElement.style.setProperty('--btn-grad-end', '#2A9BD9');
       
       // Restore range cells
       const rangeCells = document.querySelectorAll('.range-cell');
@@ -79,6 +82,14 @@
         cell.style.color = '#111';
         cell.style.border = 'none';
       });
+      
+      // Restore big number
+      const bigNumber = document.querySelector('.big-number');
+      if (bigNumber) {
+        bigNumber.style.color = '#fff';
+      }
+      
+      console.log('Applied dark theme');
     }
   }
 
@@ -259,8 +270,13 @@
   if (tg) {
     tg.MainButton.setText('Рандом');
     tg.MainButton.onClick(onGenerate);
+    
+    // Apply theme immediately and on change
     applyTheme();
-    tg.onEvent('themeChanged', applyTheme);
+    tg.onEvent('themeChanged', () => {
+      console.log('Theme changed, reapplying...');
+      setTimeout(applyTheme, 100); // Small delay to ensure theme params are updated
+    });
     
     // Hide HTML button in Telegram, use only MainButton
     els.randomBtn.style.display = 'none';
