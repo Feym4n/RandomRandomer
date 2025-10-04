@@ -28,12 +28,15 @@
   }
 
   /**
-   * Apply Telegram theme colors
+   * Apply Telegram theme colors with smart inversion
    */
   function applyTheme() {
     if (!tg || !tg.themeParams) return;
     
     const themeParams = tg.themeParams;
+    const isDark = themeParams.bg_color === '#17212b' || 
+                   themeParams.bg_color === '#0f1419' ||
+                   !themeParams.bg_color; // Default is dark
     
     // Apply background color
     if (themeParams.bg_color) {
@@ -43,6 +46,39 @@
     // Apply text color
     if (themeParams.text_color) {
       document.body.style.color = themeParams.text_color;
+    }
+    
+    // Smart color inversion for light theme
+    if (!isDark) {
+      // Light theme: invert colors
+      document.body.style.backgroundColor = '#ffffff';
+      document.body.style.color = '#000000';
+      
+      // Update CSS variables for light theme
+      document.documentElement.style.setProperty('--bg', '#ffffff');
+      document.documentElement.style.setProperty('--btn-grad-start', '#1C82C7');
+      document.documentElement.style.setProperty('--btn-grad-end', '#2A9BD9');
+      
+      // Make range cells dark for visibility
+      const rangeCells = document.querySelectorAll('.range-cell');
+      rangeCells.forEach(cell => {
+        cell.style.backgroundColor = '#f0f0f0';
+        cell.style.color = '#000000';
+        cell.style.border = '1px solid #ddd';
+      });
+    } else {
+      // Dark theme: restore original colors
+      document.documentElement.style.setProperty('--bg', '#22A7E0');
+      document.documentElement.style.setProperty('--btn-grad-start', '#1C82C7');
+      document.documentElement.style.setProperty('--btn-grad-end', '#2A9BD9');
+      
+      // Restore range cells
+      const rangeCells = document.querySelectorAll('.range-cell');
+      rangeCells.forEach(cell => {
+        cell.style.backgroundColor = '#fff';
+        cell.style.color = '#111';
+        cell.style.border = 'none';
+      });
     }
   }
 
@@ -229,7 +265,7 @@
     // Hide HTML button in Telegram, use only MainButton
     els.randomBtn.style.display = 'none';
     
-    // Enable closing confirmation for better UX
-    tg.enableClosingConfirmation();
+    // Remove closing confirmation to avoid annoying popup
+    // tg.enableClosingConfirmation(); // Commented out
   }
 })();
